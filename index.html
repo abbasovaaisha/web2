@@ -152,7 +152,7 @@
         <h3>3.PNG — Задание 1: <span class="badge-task">GET / HTTP/1.0</span></h3>
         <p><strong>Запрос:</strong> <code>GET / HTTP/1.0</code><br>
         <strong>Host:</strong> u82462.kubsu-dev.ru<br>
-        <strong>Ответ сервера:</strong> <code>HTTP/1.1 200 OK</code>, заголовки <code>Server: Apache/2.4.58</code>, <code>Content-Length: 335</code>. В теле — "PHP is working!" и ошибка PDO (попытка подключения к БД). Это подтверждает, что главная страница обрабатывается PHP, задание выполнено.</p>
+        <strong>Ответ сервера:</strong> <code>HTTP/1.1 200 OK</code>, заголовки <code>Server: Apache/2.4.58</code>, <code>Content-Length: 335</code>. В теле — "PHP is working!" и ошибка PDO (попытка подключения к БД). Это подтверждает, что главная страница обрабатывается PHP.</p>
         <div class="detail-box">Результат: успешное получение главной страницы в протоколе HTTP/1.0, статус 200.</div>
         <img src="3.PNG" alt="GET / HTTP/1.0">
     </div>
@@ -162,14 +162,14 @@
         <h3>4.PNG — Задание 2: <span class="badge-task">GET /bmw/index.php (HTTP/1.1)</span></h3>
         <p><strong>Запрос:</strong> <code>GET /bmw/index.php HTTP/1.1</code>, <code>Connection: close</code>.<br>
         <strong>Ответ:</strong> <code>HTTP/1.1 404 Not Found</code> (но скрипт отрабатывает), в теле — <code>Array ( )</code> и строка "Привет, мир!".<br>
-        <strong>Важно:</strong> заголовок <code>Content-Type: text/html; charset=UTF-8</code> — отсюда узнаём кодировку (UTF-8) для задания 7. Задание 2 выполнено: внутренняя страница получена через HTTP/1.1.</p>
+        <strong>Важно:</strong> заголовок <code>Content-Type: text/html; charset=UTF-8</code> — отсюда узнаём кодировку (UTF-8) </p>
         <img src="4.PNG" alt="GET /bmw/index.php">
     </div>
 
     <!-- ========= 5.PNG : задание 3 (HEAD file.tar.gz) ========= -->
     <div class="screenshot">
         <h3>5.PNG — Задание 3: <span class="badge-task">HEAD /bmw/file.tar.gz → размер</span></h3>
-        <p><strong>Метод HEAD</strong> позволяет получить метаданные без тела. Запрос: <code>HEAD /bmw/file.tar.gz HTTP/1.1</code>. Ответ: <code>200 OK</code>, заголовок <code>Content-Length: 11335</code>. Размер файла — <strong>11 335 байт</strong>. Задание выполнено без скачивания архива.</p>
+        <p><strong>Метод HEAD</strong> позволяет получить метаданные без тела. Запрос: <code>HEAD /bmw/file.tar.gz HTTP/1.1</code>. Ответ: <code>200 OK</code>, заголовок <code>Content-Length: 11335</code>. Размер файла — <strong>11 335 байт</strong> </p>
         <div class="detail-box"> Content-Length = 11335 bytes — точный размер.</div>
         <img src="5.PNG" alt="HEAD file.tar.gz">
     </div>
@@ -178,7 +178,7 @@
     <div class="screenshot">
         <h3>6.PNG — Задание 4: <span class="badge-task">HEAD /bmw/image.png → медиатип</span></h3>
         <p><strong>Запрос:</strong> <code>HEAD /bmw/image.png HTTP/1.1</code>, корректный Host: u82462.kubsu-dev.ru.<br>
-        <strong>Ответ сервера:</strong> <code>HTTP/1.1 200 OK</code>. В заголовках присутствует <code>Content-Type: image/png</code>. Это и есть медиатип (MIME-тип) ресурса. Также виден <code>Content-Length: 10506</code> и <code>Last-Modified</code>. Задание 4 выполнено идеально: тип ресурса определён через HEAD-запрос.</p>
+        <strong>Ответ сервера:</strong> <code>HTTP/1.1 200 OK</code>. В заголовках присутствует <code>Content-Type: image/png</code>. Это и есть медиатип (MIME-тип) ресурса. Также виден <code>Content-Length: 10506</code> и <code>Last-Modified</code> </p>
         <div class="detail-box"> MIME-тип: <strong>image/png</strong> — именно так web-сервер сообщает браузеру, что это PNG-изображение.</div>
         <img src="6.PNG" alt="HEAD image.png успешный ответ">
     </div>
@@ -189,21 +189,21 @@
         <p><strong>Запрос:</strong> <code>POST /bmw/index.php HTTP/1.1</code><br>
         <strong>Заголовки:</strong> <code>Content-Type: application/x-www-form-urlencoded</code>, <code>Content-Length: 14</code><br>
         <strong>Тело:</strong> <code>comment=Hello</code><br>
-        <strong>Ответ:</strong> сервер вернул <code>Array ( [comment] => Hello )</code> и "Привет, мир!". Это доказывает, что PHP-скрипт принял POST-данные. Задание 5 (сложность 2 балла) выполнено.</p>
+        <strong>Ответ:</strong> сервер вернул <code>Array ( [comment] => Hello )</code> и "Привет, мир!". Это доказывает, что PHP-скрипт принял POST-данные.</p>
         <img src="7.PNG" alt="POST комментарий">
     </div>
 
     <!-- ========= 8.PNG : задание 6 Range ========= -->
     <div class="screenshot">
         <h3> 8.PNG — Задание 6: <span class="badge-task">Range: bytes=0-99 (первые 100 байт file.tar.gz)</span></h3>
-        <p><strong>Запрос:</strong> <code>GET /bmw/file.tar.gz HTTP/1.1</code> с заголовком <code>Range: bytes=0-99</code>. <strong>Ответ:</strong> <code>206 Partial Content</code> (частичное содержимое). Заголовок <code>Content-Range: bytes 0-99/11335</code> и <code>Content-Length: 100</code>. В теле — первые 100 байт архива. Задание демонстрирует поддержку частичной выгрузки файлов (RFC 2616).</p>
+        <p><strong>Запрос:</strong> <code>GET /bmw/file.tar.gz HTTP/1.1</code> с заголовком <code>Range: bytes=0-99</code>. <strong>Ответ:</strong> <code>206 Partial Content</code> (частичное содержимое). Заголовок <code>Content-Range: bytes 0-99/11335</code> и <code>Content-Length: 100</code>. В теле — первые 100 байт архива. </p>
         <img src="8.PNG" alt="Range первые 100 байт">
     </div>
 
     <!-- ========= 9.PNG : задание 7 (кодировка через HEAD) ========= -->
     <div class="screenshot">
         <h3> 9.PNG — Задание 7: <span class="badge-task">кодировка ресурса /bmw/index.php</span></h3>
-        <p><strong>Запрос:</strong> <code>HEAD /bmw/index.php HTTP/1.1</code>. В ответе сервер возвращает заголовок <code>Content-Type: text/html; charset=UTF-8</code>. Значит, кодировка — <strong>UTF-8</strong>. Задание выполнено, кодировка определена без загрузки полной страницы.</p>
+        <p><strong>Запрос:</strong> <code>HEAD /bmw/index.php HTTP/1.1</code>. В ответе сервер возвращает заголовок <code>Content-Type: text/html; charset=UTF-8</code>. Значит, кодировка — <strong>UTF-8</strong>. </p>
         <img src="9.PNG" alt="HEAD index.php кодировка">
     </div>
 
@@ -211,7 +211,7 @@
     <div class="screenshot">
         <h3> 10.PNG — Финальное обновление репозитория (git pull)</h3>
         <p>После добавления всех скриншотов (0..PNG, 1..PNG, … 9.PNG) и index.html в репозиторий, на сервере выполнены команды:<br>
-        <code>cd web2 && git pull</code> → загружены 11 новых файлов. Затем <code>cp -r ~/web2/* ~/www/bmw/</code> → синхронизация с рабочей директорией домена. Теперь страница index.html и скриншоты доступны по адресу <strong>u82462.kubsu-dev.ru/bmw/</strong>.</p>
+        <code>cd web2 && git pull</code> → загружены 11 новых файлов. Затем <code>cp -r ~/web2/* ~/www/bmw/</code> → синхронизация с рабочей директорией домена. </p>
         <img src="10.PNG" alt="git pull и копирование">
     </div>
 
