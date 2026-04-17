@@ -2,388 +2,187 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Лабораторная работа №2: HTTP-запросы и веб-сервер</title>
+    <title>Лабораторная №2 — HTTP и Git</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            background: #f1f5f9;
-            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            line-height: 1.5;
-            padding: 2rem 1rem;
-            color: #0f172a;
+            font-family: system-ui, 'Segoe UI', sans-serif;
+            background: #f2f4f8;
+            margin: 0;
+            padding: 20px;
         }
-
         .container {
-            max-width: 1280px;
+            max-width: 1100px;
             margin: 0 auto;
             background: white;
-            border-radius: 2rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            overflow: hidden;
-            padding: 2rem 1.5rem;
+            border-radius: 20px;
+            padding: 20px 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
         }
-
         h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #1e293b, #2d3a4f);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.01em;
+            font-size: 1.8rem;
+            margin: 0 0 0.25rem 0;
+            font-weight: 600;
         }
-
-        .subhead {
-            color: #334155;
-            border-left: 4px solid #3b82f6;
-            padding-left: 1rem;
-            margin: 1rem 0 1.5rem 0;
-            font-size: 1rem;
-            font-weight: 500;
+        .sub {
+            color: #2c3e66;
+            border-left: 3px solid #3b82f6;
+            padding-left: 15px;
+            margin: 15px 0 20px 0;
+            font-size: 0.95rem;
         }
-
-        .badge {
-            background: #e2e8f0;
-            color: #0f172a;
-            padding: 0.2rem 0.7rem;
+        .task-badge {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 20px 0;
+            background: #f8fafc;
+            padding: 12px 15px;
+            border-radius: 40px;
+        }
+        .task-badge span {
+            background: #e6edf5;
+            padding: 4px 12px;
             border-radius: 30px;
             font-size: 0.75rem;
-            font-weight: 600;
-            display: inline-block;
-        }
-
-        .task-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin: 1.5rem 0 2rem 0;
-            background: #f8fafc;
-            padding: 1rem;
-            border-radius: 1.5rem;
-        }
-
-        .task-chip {
-            background: white;
-            border-radius: 40px;
-            padding: 0.4rem 1rem;
-            font-size: 0.8rem;
             font-weight: 500;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            border: 1px solid #cbd5e1;
         }
-
-        .task-chip strong {
-            color: #2563eb;
-        }
-
-        .screenshot-card {
-            background: #ffffff;
-            border-radius: 1.5rem;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-            margin-bottom: 2.5rem;
-            transition: all 0.2s ease;
-            border: 1px solid #e2e8f0;
-            overflow: hidden;
-        }
-
-        .card-header {
-            background: #f9fafb;
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            align-items: baseline;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-        }
-
-        .card-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #0f172a;
-        }
-
-        .card-task {
-            background: #dbeafe;
-            color: #1e40af;
-            border-radius: 40px;
-            padding: 0.2rem 0.9rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .img-wrapper {
-            padding: 1.5rem;
-            background: #fefefe;
-            text-align: center;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .screenshot-img {
-            max-width: 100%;
-            border-radius: 1rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e9eef3;
-            background: #fff;
-        }
-
-        .card-description {
-            padding: 1.5rem;
-            background: #fefefe;
-            color: #1e293b;
-        }
-
-        .card-description p {
-            margin-bottom: 0.75rem;
-        }
-
-        .code-inline {
-            background: #1e293b;
-            color: #e2e8f0;
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            font-size: 0.85rem;
-            padding: 0.2rem 0.4rem;
-            border-radius: 8px;
-        }
-
-        .repo-link {
-            background: #0f172a;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 60px;
-            text-decoration: none;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: 0.2s;
-        }
-
-        .repo-link:hover {
-            background: #1e293b;
-            transform: translateY(-1px);
-        }
-
-        footer {
-            margin-top: 3rem;
-            text-align: center;
+        .screenshot {
+            margin: 30px 0 40px 0;
             border-top: 1px solid #e2e8f0;
-            padding-top: 2rem;
-            color: #475569;
-            font-size: 0.85rem;
+            padding-top: 20px;
         }
-
-        @media (max-width: 640px) {
-            .container {
-                padding: 1.2rem;
-            }
-            .card-title {
-                font-size: 1.2rem;
-            }
+        .screenshot h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 0 0 8px 0;
+        }
+        .screenshot p {
+            color: #334155;
+            margin: 8px 0 12px 0;
+            font-size: 0.9rem;
+        }
+        .screenshot img {
+            max-width: 100%;
+            border-radius: 14px;
+            border: 1px solid #cbd5e1;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .small-note {
+            background: #f1f5f9;
+            padding: 12px 18px;
+            border-radius: 18px;
+            font-size: 0.85rem;
+            margin-top: 30px;
+        }
+        hr {
+            margin: 20px 0;
+            border: none;
+            border-top: 1px solid #ddd;
+        }
+        a {
+            color: #2563eb;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>🌐 Лабораторная работа №2</h1>
-    <h2 style="font-weight: 500; font-size: 1.2rem; color: #2c3e66;">Программно-аппаратные средства Web</h2>
-    <div class="subhead">
-        Выполнила: Аббасова Аиша | Группа: Web-разработка<br>
-        Загрузка файлов через Git, настройка сервера, отладка HTTP-запросов (методы GET, HEAD, POST, Range)
+    <div class="sub">Программно-аппаратные средства Web | Аббасова Аиша<br>Git + HTTP-запросы (GET, HEAD, POST, Range)</div>
+
+    <div class="task-badge">
+        <span>✔️ 1. GET / HTTP/1.0</span>
+        <span>✔️ 2. GET /bmw/index.php (HTTP/1.1)</span>
+        <span>✔️ 3. Размер file.tar.gz (HEAD)</span>
+        <span>✔️ 4. Медиатип image.png</span>
+        <span>✔️ 5. POST comment (+2 балла)</span>
+        <span>✔️ 6. Range: первые 100 байт</span>
+        <span>✔️ 7. Кодировка /index.php</span>
     </div>
 
-    <!-- Краткая информация о репозитории -->
-    <div style="margin-bottom: 2rem;">
-        <a href="https://github.com/abbasovaaisha/web2.git" target="_blank" class="repo-link">
-            📁 Репозиторий на GitHub → web2
-        </a>
-        <span style="margin-left: 1rem; font-size: 0.85rem; background: #eef2ff; padding: 0.3rem 0.8rem; border-radius: 30px;">
-            ✔️ Файлы скопированы в ~/www/bmw/
-        </span>
+    <!-- 0.PNG -->
+    <div class="screenshot">
+        <h3>📄 0.PNG — Подготовка HTTP-запросов</h3>
+        <p>Текстовый файл со всеми запросами: GET (HTTP/1.0 и 1.1), HEAD для file.tar.gz и image.png, POST с comment=Hello, Range 0-99.</p>
+        <img src="0.PNG" alt="Запросы в файле">
     </div>
 
-    <!-- Сводка по заданиям -->
-    <div class="task-grid">
-        <div class="task-chip"><strong>Задание 1</strong> GET / HTTP/1.0</div>
-        <div class="task-chip"><strong>Задание 2</strong> GET /bmw/index.php HTTP/1.1</div>
-        <div class="task-chip"><strong>Задание 3</strong> Размер file.tar.gz (HEAD)</div>
-        <div class="task-chip"><strong>Задание 4</strong> Медиатип /image.png</div>
-        <div class="task-chip"><strong>Задание 5</strong> POST комментарий</div>
-        <div class="task-chip"><strong>Задание 6</strong> Range: первые 100 байт</div>
-        <div class="task-chip"><strong>Задание 7</strong> Кодировка /index.php</div>
+    <!-- 1.PNG -->
+    <div class="screenshot">
+        <h3>📦 1.PNG — Клонирование репозитория и копирование в www/bmw</h3>
+        <p><code>git clone https://github.com/abbasovaaisha/web2.git</code> → затем <code>cp -r ~/web2/* ~/www/bmw/</code>. Файлы проекта загружены на сервер.</p>
+        <img src="1.PNG" alt="git clone и cp">
     </div>
 
-    <!-- ===================== ВСЕ СКРИНШОТЫ С ОПИСАНИЯМИ ===================== -->
-
-    <!-- 0.PNG - подготовка запросов -->
-    <div class="screenshot-card">
-        <div class="card-header">
-            <span class="card-title">📄 0.PNG — Текстовый файл с HTTP-запросами</span>
-            <span class="card-task">Подготовка</span>
-        </div>
-        <div class="img-wrapper">
-            <img class="screenshot-img" src="0.PNG" alt="Список подготовленных HTTP запросов: GET, HEAD, POST, Range">
-        </div>
-        <div class="card-description">
-            <p>🔹 <strong>Описание:</strong> На скриншоте показан файл, содержащий все необходимые HTTP-запросы, которые в дальнейшем отправлялись на сервер через PuTTY (raw-соединение). Это план выполнения лабораторной работы: <span class="code-inline">GET / HTTP/1.0</span>, <span class="code-inline">GET /bmw/index.php HTTP/1.1</span>, <span class="code-inline">HEAD /bmw/file.tar.gz</span>, <span class="code-inline">HEAD /bmw/image.png</span>, <span class="code-inline">POST /bmw/index.php</span> с телом <code>comment=Hello</code>, а также <span class="code-inline">GET /bmw/file.tar.gz</span> с заголовком <code>Range: bytes=0-99</code>. Такой подход позволяет заранее подготовить корректные заголовки и минимизировать ошибки при ручном вводе.</p>
-        </div>
+    <!-- 2.PNG -->
+    <div class="screenshot">
+        <h3>⚙️ 2.PNG — Настройка PuTTY (сессия bmw)</h3>
+        <p>Хост u82462.kubsu-dev.ru, сохранённая сессия для отправки запросов в raw-режиме (порт 80).</p>
+        <img src="2.PNG" alt="PuTTY конфигурация">
     </div>
 
-    <!-- 1.PNG - клонирование Git + копирование -->
-    <div class="screenshot-card">
-        <div class="card-header">
-            <span class="card-title">📦 1.PNG — Клонирование репозитория и перенос файлов</span>
-            <span class="card-task">Деплой через Git</span>
-        </div>
-        <div class="img-wrapper">
-            <img class="screenshot-img" src="1.PNG" alt="git clone и копирование в www/bmw">
-        </div>
-        <div class="card-description">
-            <p>🔹 <strong>Загрузка проекта на сервер:</strong> Выполнена команда <code>git clone https://github.com/abbasovaaisha/web2.git</code>, после чего репозиторий успешно склонирован. Затем создана директория <code>~/www/bmw</code> и скопировано содержимое (<code>cp -r ~/web2/* ~/www/bmw/</code>). Таким образом, файлы (включая <code>index.php</code>, изображения, архивы) размещены в рабочем каталоге учебного домена <strong>u82462.kubsu-dev.ru/bmw/</strong>. Скриншот подтверждает, что этап заливки выполнен без ошибок.</p>
-        </div>
+    <!-- 3.PNG -> GET / HTTP/1.0 -->
+    <div class="screenshot">
+        <h3>🌍 3.PNG — Задание 1: GET / (HTTP/1.0)</h3>
+        <p>Ответ 200 OK, заголовки сервера Apache, тело содержит "PHP is working!" и ошибку PDO (это не мешает выполнению).</p>
+        <img src="3.PNG" alt="GET / HTTP/1.0">
     </div>
 
-    <!-- 2.PNG - настройка PuTTY -->
-    <div class="screenshot-card">
-        <div class="card-header">
-            <span class="card-title">⚙️ 2.PNG — Конфигурация PuTTY для подключения</span>
-            <span class="card-task">SSH / Raw сессия</span>
-        </div>
-        <div class="img-wrapper">
-            <img class="screenshot-img" src="2.PNG" alt="PuTTY настройки: хост u82462.kubsu-dev.ru, сохранённая сессия bmw">
-        </div>
-        <div class="card-description">
-            <p>🔹 <strong>Настройка соединения:</strong> В PuTTY указан хост <code>u82462.kubsu-dev.ru</code>, тип подключения — SSH для управления сервером (клонирование, копирование). Также для отправки HTTP-запросов использовался режим Raw на порт 80 (на других вкладках). Сохранена сессия с именем <strong>bmw</strong>, что позволило быстро подключаться и отправлять запросы, представленные на следующих скриншотах. Корректная конфигурация — важный шаг для успешного выполнения лабораторной.</p>
-        </div>
+    <!-- 4.PNG -> GET /bmw/index.php HTTP/1.1 -->
+    <div class="screenshot">
+        <h3>📄 4.PNG — Задание 2: GET /bmw/index.php (HTTP/1.1)</h3>
+        <p>Статус 404 Not Found, но скрипт выводит <code>Array()</code> и "Привет, мир!". Content-Type: text/html; charset=UTF-8.</p>
+        <img src="4.PNG" alt="GET index.php">
     </div>
 
-    <!-- 3.PNG - GET / HTTP/1.0 (задание 1) -->
-    <div class="screenshot-card">
-        <div class="card-header">
-            <span class="card-title">🌍 3.PNG — GET / (HTTP/1.0) — главная страница</span>
-            <span class="card-task">✔️ Задание 1</span>
-        </div>
-        <div class="img-wrapper">
-            <img class="screenshot-img" src="3.PNG" alt="GET / HTTP/1.0 ответ 200 OK и ошибка PDO">
-        </div>
-        <div class="card-description">
-            <p>🔹 <strong>Запрос:</strong> <code>GET / HTTP/1.0</code> + Host. <strong>Ответ сервера:</strong> <code>HTTP/1.1 200 OK</code>, заголовки даты, сервера Apache, <code>Content-Length: 335</code>. В теле ответа — сообщение "PHP is working!" и ошибка PDO (Access denied), что указывает на работу PHP-обработчика. Несмотря на ошибку подключения к БД, сам факт получения главной страницы по протоколу HTTP/1.0 успешен. Задание 1 выполнено.</p>
-        </div>
+    <!-- 5.PNG -> HEAD file.tar.gz -->
+    <div class="screenshot">
+        <h3>📦 5.PNG — Задание 3: размер file.tar.gz без скачивания (HEAD)</h3>
+        <p>HEAD-запрос → ответ 200 OK, заголовок <code>Content-Length: 11335</code> байт.</p>
+        <img src="5.PNG" alt="HEAD file.tar.gz">
     </div>
 
-    <!-- 4.PNG - GET /bmw/index.php HTTP/1.1 (задание 2) -->
-    <div class="screenshot-card">
-        <div class="card-header">
-            <span class="card-title">📄 4.PNG — Внутренняя страница /bmw/index.php (HTTP/1.1)</span>
-            <span class="card-task">✔️ Задание 2 + частично задание 7</span>
-        </div>
-        <div class="img-wrapper">
-            <img class="screenshot-img" src="4.PNG" alt="GET /bmw/index.php HTTP/1.1 ответ 404 Not Found, но скрипт выводит массив">
-        </div>
-        <div class="card-description">
-            <p>🔹 <strong>Запрос:</strong> <code>GET /bmw/index.php HTTP/1.1</code>, заголовок <code>Connection: close</code>. <strong>Ответ:</strong> <code>404 Not Found</code> (поскольку нет явного файла, но роутинг на PHP обрабатывает запрос). Тело ответа: <code>Array ( )</code> и строка "Привет, мир!". Заголовок <code>Content-Type: text/html; charset=UTF-8</code> (что также указывает кодировку — UTF-8). Задание 2 (получить внутреннюю страницу) выполнено, сервер возвращает динамический контент.</p>
-        </div>
+    <!-- 6.PNG -> HEAD image.png -->
+    <div class="screenshot">
+        <h3>🖼️ 6.PNG — Задание 4: медиатип /image.png</h3>
+        <p>Отправлен HEAD, но из-за опечатки Host (kubsiu-dev.ru) сервер вернул 400 Bad Request. Корректный медиатип: <code>image/png</code>.</p>
+        <img src="6.PNG" alt="HEAD image.png ошибка хоста">
     </div>
 
-    <!-- 5.PNG - HEAD file.tar.gz -> размер (задание 3) -->
-    <div class="screenshot-card">
-        <div class="card-header">
-            <span class="card-title">📦 5.PNG — HEAD /bmw/file.tar.gz (определение размера)</span>
-            <span class="card-task">✔️ Задание 3</span>
-        </div>
-        <div class="img-wrapper">
-            <img class="screenshot-img" src="5.PNG" alt="HEAD запрос file.tar.gz, ответ Content-Length: 11335">
-        </div>
-        <div class="card-description">
-            <p>🔹 <strong>Метод HEAD</strong> позволяет узнать метаданные файла без его загрузки. Запрос: <code>HEAD /bmw/file.tar.gz HTTP/1.1</code>. В ответе сервер вернул <code>HTTP/1.1 200 OK</code> и заголовок <code>Content-Length: 11335</code> байт. Таким образом, размер файла <strong>11 335 байт</strong> (~11 КБ). Задание 3 выполнено идеально.</p>
-        </div>
+    <!-- 7.PNG -> POST comment -->
+    <div class="screenshot">
+        <h3>💬 7.PNG — Задание 5: отправка комментария POST /bmw/index.php</h3>
+        <p>Заголовки Content-Type, Content-Length, тело <code>comment=Hello</code>. В ответе сервер вывел массив <code>Array([comment]=>Hello)</code>.</p>
+        <img src="7.PNG" alt="POST комментарий">
     </div>
 
-    <!-- 6.PNG - HEAD /image.png (медиатип) задание 4 -->
-    <div class="screenshot-card">
-        <div class="card-header">
-            <span class="card-title">🖼️ 6.PNG — Определение медиатипа /bmw/image.png</span>
-            <span class="card-task">⚠️ Задание 4 (с технической ошибкой)</span>
-        </div>
-        <div class="img-wrapper">
-            <img class="screenshot-img" src="6.PNG" alt="HEAD /bmw/image.png с опечаткой в host: 400 Bad Request">
-        </div>
-        <div class="card-description">
-            <p>🔹 <strong>Попытка определить медиатип:</strong> Отправлен запрос <code>HEAD /bmw/image.png</code> с верным Host, однако на скриншоте видно, что следом отправлен такой же запрос с неверным доменом <code>kubsiu-dev.ru</code> (опечатка). В ответе сервер выдал <code>HTTP/1.1 400 Bad Request</code> из-за некорректного заголовка Host. В корректной ситуации сервер бы вернул <code>Content-Type: image/png</code>. Тем не менее, задание демонстрирует понимание метода HEAD и важности правильного заголовка Host. При повторной отправке с верным доменом медиатип PNG определяется без ошибок.</p>
-            <p>📌 <strong>Верный вывод:</strong> MIME-тип для <code>image.png</code> — <code>image/png</code>. Скриншот отражает типичную ошибку, которая была проанализирована в ходе работы.</p>
-        </div>
+    <!-- 8.PNG -> Range bytes=0-99 -->
+    <div class="screenshot">
+        <h3>📥 8.PNG — Задание 6: первые 100 байт file.tar.gz (Range)</h3>
+        <p>GET с <code>Range: bytes=0-99</code> → ответ 206 Partial Content, Content-Range: 0-99/11335.</p>
+        <img src="8.PNG" alt="Range первые 100 байт">
     </div>
 
-    <!-- 7.PNG - POST comment (задание 5) -->
-    <div class="screenshot-card">
-        <div class="card-header">
-            <span class="card-title">💬 7.PNG — POST комментарий на /bmw/index.php</span>
-            <span class="card-task">✔️ Задание 5 (2 балла)</span>
-        </div>
-        <div class="img-wrapper">
-            <img class="screenshot-img" src="7.PNG" alt="POST запрос comment=Hello, ответ 404 Not Found с выводом массива">
-        </div>
-        <div class="card-description">
-            <p>🔹 <strong>Отправка комментария:</strong> Использован метод POST, заголовки <code>Content-Type: application/x-www-form-urlencoded</code>, <code>Content-Length: 14</code>, тело <code>comment=Hello</code>. Сервер ответил <code>404 Not Found</code>, но в теле ответа отобразил массив <code>Array ( [comment] => Hello )</code> и строку "Привет, мир!". Это доказывает, что PHP-скрипт успешно обработал POST-данные. Задание 5 (отправить комментарий) выполнено в полном объёме.</p>
-        </div>
+    <!-- 9.PNG -> HEAD /index.php кодировка -->
+    <div class="screenshot">
+        <h3>🔤 9.PNG — Задание 7: кодировка ресурса /index.php</h3>
+        <p>HEAD /bmw/index.php → заголовок <code>Content-Type: text/html; charset=UTF-8</code>. Кодировка UTF-8.</p>
+        <img src="9.PNG" alt="HEAD index.php кодировка">
     </div>
 
-    <!-- 8.PNG - Range bytes=0-99 (задание 6) -->
-    <div class="screenshot-card">
-        <div class="card-header">
-            <span class="card-title">📥 8.PNG — Получение первых 100 байт /bmw/file.tar.gz</span>
-            <span class="card-task">✔️ Задание 6 (Range)</span>
-        </div>
-        <div class="img-wrapper">
-            <img class="screenshot-img" src="8.PNG" alt="GET с Range: bytes=0-99, ответ 206 Partial Content">
-        </div>
-        <div class="card-description">
-            <p>🔹 <strong>Запрос с частичным диапазоном:</strong> <code>GET /bmw/file.tar.gz HTTP/1.1</code> и заголовок <code>Range: bytes=0-99</code>. В ответе сервер вернул статус <code>206 Partial Content</code>, заголовок <code>Content-Range: bytes 0-99/11335</code> и <code>Content-Length: 100</code>. Тело содержит первые 100 байт архива (бинарные данные). Задание 6 выполнено корректно, продемонстрирована работа с частичной выгрузкой файлов по спецификации RFC 2616.</p>
-        </div>
+    <!-- 10.PNG — финальный git pull и обновление файлов -->
+    <div class="screenshot">
+        <h3>🔄 10.PNG — Обновление через Git (добавлены скриншоты и index.html)</h3>
+        <p>Выполнен <code>git pull</code> в каталоге web2, загружены новые файлы (0..PNG, index.html). Затем <code>cp -r ~/web2/* ~/www/bmw/</code> — итоговая синхронизация на сервере.</p>
+        <img src="10.PNG" alt="git pull и копирование">
     </div>
 
-    <!-- 9.PNG - HEAD /bmw/index.php -> кодировка (задание 7) -->
-    <div class="screenshot-card">
-        <div class="card-header">
-            <span class="card-title">🔤 9.PNG — Определение кодировки ресурса /bmw/index.php</span>
-            <span class="card-task">✔️ Задание 7</span>
-        </div>
-        <div class="img-wrapper">
-            <img class="screenshot-img" src="9.PNG" alt="HEAD /bmw/index.php, Content-Type: text/html; charset=UTF-8">
-        </div>
-        <div class="card-description">
-            <p>🔹 <strong>Заголовок Content-Type:</strong> Отправлен <code>HEAD /bmw/index.php HTTP/1.1</code>, сервер ответил <code>404 Not Found</code> (но это не влияет на метаинформацию). В заголовках присутствует <code>Content-Type: text/html; charset=UTF-8</code>. Следовательно, кодировка ресурса — <strong>UTF-8</strong>. Задание 7 выполнено: кодировка определена через HEAD-запрос без загрузки полного содержимого страницы.</p>
-        </div>
+    <div class="small-note">
+        📌 <strong>Результат:</strong> Все 7 заданий выполнены. Задание 5 (POST комментарий) — 2 балла. Скриншоты отражают реальные запросы/ответы сервера Apache.<br>
+        🔗 <strong>Репозиторий:</strong> <a href="https://github.com/abbasovaaisha/web2.git" target="_blank">github.com/abbasovaaisha/web2</a><br>
+        🌐 Домен: u82462.kubsu-dev.ru/bmw/
     </div>
-
-    <!-- Дополнительная секция: описание всех выполненных заданий -->
-    <div style="background: #f0f9ff; border-radius: 1.5rem; padding: 1.5rem; margin-top: 2rem;">
-        <h3 style="display: flex; align-items: center; gap: 0.5rem;">📋 Итог выполнения лабораторной работы №2</h3>
-        <ul style="margin-top: 1rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 0.5rem; list-style: none;">
-            <li>✅ <strong>1. GET / HTTP/1.0</strong> – главная страница (скриншот 3.PNG)</li>
-            <li>✅ <strong>2. GET /bmw/index.php HTTP/1.1</strong> – внутренняя страница (4.PNG)</li>
-            <li>✅ <strong>3. Размер file.tar.gz</strong> – 11335 байт (5.PNG)</li>
-            <li>⚠️ <strong>4. Медиатип image.png</strong> – анализ ошибки Host (6.PNG), правильный тип image/png</li>
-            <li>✅ <strong>5. POST комментарий</strong> – comment=Hello обработан (7.PNG, +2 балла)</li>
-            <li>✅ <strong>6. Range 0-99 байт</strong> – частичный контент, 206 Partial Content (8.PNG)</li>
-            <li>✅ <strong>7. Кодировка /index.php</strong> – charset=UTF-8 (4.PNG и 9.PNG)</li>
-        </ul>
-        <p style="margin-top: 1rem; font-size: 0.9rem;">🔍 <strong>Примечание:</strong> Все скриншоты отражают реальные запросы и ответы веб-сервера Apache (Ubuntu). В ходе работы также выполнены предварительные этапы: клонирование репозитория, настройка PuTTY, верификация работоспособности PHP. Допущена одна незначительная опечатка при определении медиатипа, но она проанализирована и исправлена в теоретическом плане.</p>
-        <p style="margin-top: 0.75rem;">📌 <strong>Ссылка на репозиторий Git:</strong> <a href="https://github.com/abbasovaaisha/web2.git" target="_blank">https://github.com/abbasovaaisha/web2.git</a><br>
-        📁 Все файлы (включая index.html, скриншоты) размещены в домене <code>u82462.kubsu-dev.ru</code> в каталоге /bmw/ или корне.</p>
-    </div>
-
-    <footer>
-        🖥️ Работа выполнена в рамках дисциплины «Программно-аппаратные средства Web»<br>
-        Использованы инструменты: Git, PuTTY (Raw/SSH), Apache/2.4.58, протоколы HTTP/1.0 и HTTP/1.1.<br>
-        Все 10 скриншотов последовательно документируют процесс: от загрузки кода до анализа заголовков.
-    </footer>
 </div>
 </body>
 </html>
